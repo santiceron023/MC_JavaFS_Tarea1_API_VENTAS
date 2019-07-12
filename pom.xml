@@ -12,7 +12,7 @@
 	<groupId>com.JavFS</groupId>
 	<artifactId>Tarea1_Rest</artifactId>
 	<version>1.1</version>
-	<name>Tarea1</name>
+	<name>App Ventas</name>
 	<description>App Ventas - Santiago Felipe Cerón Araujo</description>
 
 	<properties>
