@@ -17,8 +17,8 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableSwagger2
 public class SwaggerConfig {
 
-	public static final Contact contacto = new Contact("Santago Ceron", "https://www.google.com", "Santiceron023@gmail.com");
-	public static final ApiInfo info = new ApiInfo("Tarea 1", "BackEnd Rest", "version 1.0", 
+	public static final Contact contacto = new Contact("Santago Felipe Ceron Araujo", "https://github.com/santiceron023", "Santiceron023@gmail.com");
+	public static final ApiInfo info = new ApiInfo("Aplicación para manejo de ventas", "BackEnd Rest", "version 1.1", 
 			"termsOfServiceUrl",contacto, " uso educativo, APACHE 2.0"," http://www.apache.com", 
 			new ArrayList<VendorExtension>());
 

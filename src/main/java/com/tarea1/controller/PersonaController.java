@@ -2,6 +2,9 @@ package com.tarea1.controller;
 
 import java.net.URI;
 import java.util.List;
+
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,55 +25,83 @@ import com.tarea1.service.IPersonaService;
 @RestController
 @RequestMapping("/personas")
 public class PersonaController {
-	
+
 	@Autowired
 	IPersonaService servicio;
 
-	@GetMapping
-	public ResponseEntity<List<Persona>> listar(){		
-		return new ResponseEntity< List<Persona> > (servicio.consultar(),HttpStatus.OK);
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> listar(){		
+		try {
+			return new ResponseEntity< List<Persona> > (servicio.consultar(),HttpStatus.OK);
+		}catch (Exception e) {
+			return new ResponseEntity< String > (
+					"Error interno"+ e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-	
+
 	@GetMapping(value = "/{id}",produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> listarPorId(@PathVariable("id") Integer id){
 
-		Persona per = servicio.consultarPorId(id);
+		Persona persona = servicio.consultarPorId(id);
 
-		if (per == null) {
-			return new ResponseEntity<String>("no encontrado",HttpStatus.NOT_FOUND);
-		}
-		else {
-			return new ResponseEntity<Persona>(per,HttpStatus.OK);
+		try {
+			if (persona == null) {
+				return new ResponseEntity<String>("No encontrado",HttpStatus.NOT_FOUND);
+			}
+			else {
+				return new ResponseEntity<Persona>(persona,HttpStatus.OK);
+			}
+
+		} catch (Exception e) {
+			return new ResponseEntity< String > (
+					"Error interno"+ e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@PostMapping
-	public ResponseEntity<Persona> registrar(@RequestBody Persona per) {
+	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> registrar(@RequestBody @Valid Persona per) {
 
-		Persona perSaved = servicio.registrar(per);
-		//original + id 
-		URI uriLocation = ServletUriComponentsBuilder.fromCurrentRequest().
-				path("/{id}").buildAndExpand(perSaved.getIdPersona()).toUri();
+		try {
+			Persona perSaved = servicio.registrar(per);
+			//original + id 
+			URI uriLocation = ServletUriComponentsBuilder.fromCurrentRequest().
+					path("/{id}").buildAndExpand(perSaved.getIdPersona()).toUri();
 
-		return ResponseEntity.created(uriLocation).build();
+			return ResponseEntity.created(uriLocation).build();
+
+		} catch (Exception e) {
+			return new ResponseEntity< String > (
+					"Error interno"+ e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 
 
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<?> eliminarPorId(@PathVariable("id") Integer id){
+		try {
 
-		if(servicio.consultarPorId(id) != null) {
-			servicio.eliminar(id);
-			return new ResponseEntity<String>("Eliminado",HttpStatus.OK);
-		}else {
-			return new ResponseEntity<String>("no encontrado",HttpStatus.NOT_FOUND);
+			if(servicio.consultarPorId(id) != null) {
+				servicio.eliminar(id);
+				return new ResponseEntity<String>("Eliminado correctamente",HttpStatus.OK);
+			}else {
+				return new ResponseEntity<String>("Id no encontrado",HttpStatus.NOT_FOUND);
+			}
+		} catch (Exception e) {
+			return new ResponseEntity< String > (
+					"Error interno"+ e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
-	@PutMapping
-	public Persona modificar(@RequestBody Persona pac) {
-		return servicio.modificar(pac);
+	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> modificar(@RequestBody @Valid Persona per) {
+		try {
+			Persona perSaved = servicio.modificar(per);
+			return new ResponseEntity<String>("Actualizado correctamente",HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity< String > (
+					"Error interno"+ e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
-	
 
-}
+
+	}

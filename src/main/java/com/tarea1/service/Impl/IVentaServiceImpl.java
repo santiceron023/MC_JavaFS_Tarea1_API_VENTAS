@@ -16,7 +16,7 @@ public class IVentaServiceImpl implements IVentaService{
 	IVentaDao dao;
 
 	@Override
-	public Venta registrar(Venta t) {
+	public Venta registrar(Venta t) { 
 		t.getListDetalles().forEach(det -> det.setIdVenta(t));
 		return dao.save(t);
 	}

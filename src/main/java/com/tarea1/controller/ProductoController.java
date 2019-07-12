@@ -68,8 +68,8 @@ public class ProductoController {
 	}
 
 	@PutMapping
-	public Producto modificar(@RequestBody Producto pac) {
-		return servicio.modificar(pac);
+	public ResponseEntity<Producto> modificar(@RequestBody Producto pac) {
+		return new ResponseEntity<> ( servicio.modificar(pac), HttpStatus.OK);
 	}
 
 

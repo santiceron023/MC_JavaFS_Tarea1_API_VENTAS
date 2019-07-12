@@ -28,8 +28,10 @@ public class VentaController {
 	}
 
 
+
 	@PostMapping
 	public ResponseEntity<Venta> registrar(@RequestBody Venta prod) {
+
 
 		Venta prodSaved = servicio.registrar(prod);
 		//original + id 
